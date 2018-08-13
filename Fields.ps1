@@ -7,7 +7,7 @@
 #>
 
 $desktop = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Desktop"
-$mod = "C:\Program Files\WindowsPowerShell\Modules\SpikeHammer"
+$mod = "C:\Program Files\WindowsPowerShell\Modules\AutomatePS"
 $v10 = "C:\dev\branches\v10"
 $v19 = "C:\dev\branches\v19"
 $prg = "C:\Program Files"
