@@ -5,10 +5,8 @@
     Uses the oxford dictionary API to fetch synonyms
   .PARAMETER Word
     The search term
-  .PARAMETER p
-    A switch parameter that indicates whether the search term is a prefix
   .EXAMPLE
-    Thesaur-Ox "fuc" -p
+    Thesaur-Ox "ace"
   .NOTES
     Author: Reese Krome
 	1/19/2019
@@ -27,13 +25,15 @@ function global:Thesaur-Ox {
             ContentType = "application/json"}
     
         $Response = (Invoke-WebRequest @myparameters -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
-        $Response.results[0].lexicalEntries[0].Entries[0] | % {
-			#$etym = $_.etymologies[0]
-			Write-Host "$_"
+		
+		$Response.results[0].lexicalEntries | ForEach-Object {
+			$_.Entries[0].senses.synonyms | % {
+				Write-Host "$($_.Text)"
+			}
 		}
     }
     end {
-		return $Response.results
+		#return $Response.results
     }
 }
 <#
@@ -70,7 +70,7 @@ function global:Search-Ox {
         }    
     }
     end {
-		<# return $Response.results #>
+		#return $Response.results
     }
 }
 <#
