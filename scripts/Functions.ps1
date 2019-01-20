@@ -60,6 +60,15 @@ function openprof {code $prof}
 	.DESCRIPTION
 		Alias functions that are not typically used from the command line. 
 #>
+function enc-b64([string] $message){
+	$Bytes = ([System.Text.Encoding]::Unicode.GetBytes($message))
+	return [Convert]::ToBase64String($Bytes)
+}
+function dec-b64([string] $message){
+	return [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($message))
+}
+function callthesaurox ([string] $query) {Thesaur-Ox $query}
+function callsearchox ([string] $query) {Search-Ox $query}
 function cdprogramfiles {Set-Location $prg}
 function cdprogramfiles86 {Set-Location $prg86}
 function cddesktop {Set-Location $desktop}
