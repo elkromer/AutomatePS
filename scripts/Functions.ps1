@@ -60,6 +60,7 @@ function openprof {code $prof}
 	.DESCRIPTION
 		Alias functions that are not typically used from the command line. 
 #>
+function reloadprofile {Set-Location $profdir; . "Microsoft.PowerShell_profile.ps1" }
 function cdprogramfiles {Set-Location $prg}
 function cdprogramfiles86 {Set-Location $prg86}
 function cddesktop {Set-Location $desktop}

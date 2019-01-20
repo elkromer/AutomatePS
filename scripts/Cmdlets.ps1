@@ -27,9 +27,10 @@ function global:Thesaur-Ox {
             ContentType = "application/json"}
     
         $Response = (Invoke-WebRequest @myparameters -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
-        $Response.results | % {
-            Log "$($_.word)" $false  $true -Color "Green"
-        }    
+        $Response.results[0].lexicalEntries[0].Entries[0] | % {
+			#$etym = $_.etymologies[0]
+			Write-Host "$_"
+		}
     }
     end {
 		return $Response.results
@@ -366,7 +367,7 @@ function global:SET-SMSCREDENTIALS {
 #>
 
 function global:SEND-SMS {
-	[CmdletBinding()]
+	#[CmdletBinding()]
 	param(
 		$Message = "",
 		$Number = @("9196217286"),
