@@ -1,4 +1,78 @@
 <#
+  .SYNOPSIS
+    Fetches synonyms
+  .DESCRIPTION
+    Uses the oxford dictionary API to fetch synonyms
+  .PARAMETER Word
+    The search term
+  .PARAMETER p
+    A switch parameter that indicates whether the search term is a prefix
+  .EXAMPLE
+    Thesaur-Ox "fuc" -p
+  .NOTES
+    Author: Reese Krome
+	1/19/2019
+#>
+function global:Thesaur-Ox {
+    [CmdletBinding()]
+    param (
+        [string] $Word,
+        [switch] $p = $false
+    )  
+    begin {
+    
+    }
+    process { 
+        $myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/entries/en/$Word/synonyms";
+            ContentType = "application/json"}
+    
+        $Response = (Invoke-WebRequest @myparameters -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
+        $Response.results | % {
+            Log "$($_.word)" $false  $true -Color "Green"
+        }    
+    }
+    end {
+		return $Response.results
+    }
+}
+<#
+  .SYNOPSIS
+    Fetches synonyms
+  .DESCRIPTION
+    Uses the oxford dictionary API to fetch synonyms
+  .PARAMETER Word
+    The search term
+  .PARAMETER p
+    A switch parameter that indicates whether the search term is a prefix
+  .EXAMPLE
+    Search-Ox "fuc" -p
+  .NOTES
+    Author: Reese Krome
+	1/19/2019
+#>
+function global:Search-Ox {
+    [CmdletBinding()]
+    param (
+        [string] $Word,
+        [switch] $p = $false
+    )  
+    begin {
+    
+    }
+    process { 
+        $myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/search/en?q=$Word&prefix=true";
+            ContentType = "application/json"}
+    
+        $Response = (Invoke-WebRequest @myparameters -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
+        $Response.results | % {
+            Log "$($_.word)" $false  $true -Color "Green"
+        }    
+    }
+    end {
+		<# return $Response.results #>
+    }
+}
+<#
 	.SYNOPSIS
 		Create new log file
 	.DESCRIPTION
@@ -294,7 +368,7 @@ function global:SET-SMSCREDENTIALS {
 function global:SEND-SMS {
 	[CmdletBinding()]
 	param(
-		$Message = "test",
+		$Message = "",
 		$Number = @("9196217286"),
 		$File = "",
 		$mycreds = "",

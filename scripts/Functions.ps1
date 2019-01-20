@@ -42,18 +42,6 @@ function s ([string] $msg) { SET-SMSCREDENTIALS; SEND-SMS $msg;}
 function rdp ([string] $domain) { mstsc /v:$domain}
 <#
 	.SYNOPSIS
-		Pushes kmodule to a remote machine
-	.DESCRIPTION
-		An alias function that pushes the symlinked kmodule to the default sftp directory on a remote machine.
-	.EXAMPLE
-		k
-	.NOTES
-		Author: Reese Krome
-		Email: reesek@cdata.com
-#>
-function pushkmodule {Push-Location $desktop; sftph push kmodule.psm1; Pop-Location;}
-<#
-	.SYNOPSIS
 		Open powershell profile
 	.DESCRIPTION
 		Opens the powershell profile for editing in visual studio code in Documents/WindowsPowerShell
@@ -75,9 +63,6 @@ function openprof {code $prof}
 function cdprogramfiles {Set-Location $prg}
 function cdprogramfiles86 {Set-Location $prg86}
 function cddesktop {Set-Location $desktop}
-function cdtoolspath {Set-Location $toolspath}
 function cdmyscripts {Set-Location $myscripts}
-function cdv10 {Set-Location $v10}
-function cdv19 {Set-Location $v19}
 function cdmod {Set-Location $mod}
 function cdvm {Set-Location $vm}

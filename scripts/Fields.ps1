@@ -6,16 +6,10 @@
 		Email: reesek@cdata.com
 #>
 
-$desktop = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Desktop"
-$mod = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Desktop\projects\AutomatePS"
-$v10 = "C:\dev\branches\v10"
-$v19 = "C:\dev\branches\v19"
+$desktop = "C:\Users\kouey\Desktop"
+$mod = "C:\Users\kouey\Desktop\AutomatePS"
 $prg = "C:\Program Files"
 $prg86 = "C:\Program Files (x86)"
-$prof = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-$vm = "C:\Users\Reese Krome.DESKTOP-Q813OJU\VirtualBox VMs"
-$myscripts = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Desktop\scripts"
-$mllp = "C:\Users\Reese Krome.DESKTOP-Q813OJU\Documents\Visual Studio Projects\cs\mlppclient"
-$rudp = "C:\dev\branches\v10\IPWorksRTC\tests"
-$rudptestapp = "C:\dev\branches\v10\IPWorksRTC\tests\files\RUDP_Test_App\bin\Release"
-$nsoftwareBuildsEmailList = "reesek@cdata.com"
+$prof = "C:\Windows\System32\WindowsPowerShell\v1.0\Microsoft.PowerShell_profile.ps1"
+$myscripts = "C:\Users\kouey\Desktop\scripts"
+$emailaddress = "reesek@cdata.com"
