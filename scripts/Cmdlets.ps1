@@ -1,34 +1,34 @@
 <#
   .SYNOPSIS
-    Searches words
+    Gets location information about an IP Address
   .DESCRIPTION
-    Uses the oxford dictionary API to search for words
-  .PARAMETER Word
-    The search term
-  .PARAMETER p
-    A switch parameter that indicates whether the search term is a prefix
+    Uses the ipapi to get location information
+  .PARAMETER ip
+    The ip address
   .EXAMPLE
-    Search-Ox "fuc" -p
+		Get-IPLocation "25.77.74.11"
   .NOTES
     Author: Reese Krome
-	1/19/2019
+		1/19/2019
 #>
-function global:Get-Traccar {
+function global:Get-IPLocation {
     [CmdletBinding()]
     param (
-		[string] $Word
+		[string] $ip
 		 )  
     begin {
     
     }
     process { 
-        $myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/search/en?q=$Word&prefix=true";
-            ContentType = "application/json"}
+        $myparameters=@{ uri="https://ipapi.co/$ip/json/ "}
     
-        $Response = (Invoke-WebRequest @myparameters -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
-        $Response.results | % {
-            Log "$($_.word)" $false  $true -Color "Green"
-        }    
+        $Response = (Invoke-WebRequest @myparameters).Content | ConvertFrom-Json
+				
+				Log "$($Response.ip) <$($Response.latitude,$Response.longitude)>" $false $true -Color "Green"
+				Log "$($Response.city)" $false $true -Color "Green"
+				Log "$($Response.region)" $false $true -Color "Green"
+				Log "$($Response.postal)" $false $true -Color "Green"
+				Log "$($Response.country_name) ($($Response.currency))" $false $true -Color "Green"
     }
     end {
 		#return $Response.results
