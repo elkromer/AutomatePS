@@ -1,5 +1,40 @@
 <#
   .SYNOPSIS
+	Creates an empty file of a given size
+  .DESCRIPTION
+	Uses the System.IO.FileStream library to create a new file of a specified size
+  .PARAMETER Size
+	Size of file in bytes
+  .PARAMETER FileName
+	Absolute path to file
+  .EXAMPLE
+	Create-File 
+  .NOTES
+	1MB = 1,048,576 Bytes
+	1GB = 1,048,576,000 Bytes
+
+    Author: Reese Krome
+		1/19/2019
+#>
+function New-File {
+	[CmdletBinding()]
+	param (
+		[int] $Size,
+		[string] $FileName
+	)
+	
+	begin {
+		$f = New-Object System.IO.FileStream $Filename, Create, ReadWrite
+		$f.SetLength($Size)
+		$f.Close()
+	}
+	process {
+	}
+	end {
+	}
+}
+<#
+  .SYNOPSIS
     Gets location information about an IP Address
   .DESCRIPTION
     Uses the ipapi to get location information
