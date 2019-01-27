@@ -1,20 +1,51 @@
 <#
   .SYNOPSIS
-	Creates an empty file of a given size
+    Get a random inspirational quote
   .DESCRIPTION
-	Uses the System.IO.FileStream library to create a new file of a specified size
-  .PARAMETER Size
-	Size of file in bytes
-  .PARAMETER FileName
-	Absolute path to file
+    Uses the forismatic api to find a random quote and log it to console output
   .EXAMPLE
-	Create-File 
+	  Get-Quote
   .NOTES
-	1MB = 1,048,576 Bytes
-	1GB = 1,048,576,000 Bytes
+    Author: Reese Krome 
+	  1/27/2019
+#>
+function global:Get-Quote {
+	[CmdletBinding()]
+	param (
+	)  
+	begin {
+	}
+	process { 
+			$rand = Get-Random -Maximum 400000;
+
+			$myparameters=@{ uri="http://api.forismatic.com/api/1.0/?method=getQuote&key=$rand&format=json&lang=en"}
+	
+			$response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
+	
+			$resp = ConvertFrom-JSON $response.Objects.Object.'#text'
+			Log "$($resp.'quoteText')" $true $true -Color "Green"
+			Log "~$($resp.'quoteAuthor')" $false $true -Color "Green"
+	}
+	end {
+	}
+}
+<#
+  .SYNOPSIS
+	  Creates an empty file of a given size
+  .DESCRIPTION
+	  Uses the System.IO.FileStream library to create a new file of a specified size
+  .PARAMETER Size
+	  Size of file in bytes
+  .PARAMETER FileName
+	  Absolute path to file
+  .EXAMPLE
+	  Create-File 
+  .NOTES
+	  1MB = 1,048,576 Bytes
+	  1GB = 1,048,576,000 Bytes
 
     Author: Reese Krome
-		1/19/2019
+		1/23/2019
 #>
 function New-File {
 	[CmdletBinding()]
