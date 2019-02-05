@@ -46,7 +46,7 @@ function WriteWarning {
 }
 
 $systemp = "C:\Windows\Temp"
-$usrtemp = "C:\Users\kouey\AppData\Local\Temp"
+$usrtemp = "C:\Users\$env:UserName\AppData\Local\Temp"
 
 Clean-Path $systemp
 Clean-Path $usrtemp
