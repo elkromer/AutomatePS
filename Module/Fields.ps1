@@ -6,12 +6,11 @@
 		Email: reesek@cdata.com
 #>
 
-$desktop = "C:\Users\kouey\Desktop"
-$mod = "C:\Users\kouey\Desktop\AutomatePS"
+$desktop = "C:\Users\$env:UserName\Desktop"
+$mod = "C:\Program Files\WindowsPowerShell\Modules\AutomatePS"
 $prg = "C:\Program Files"
 $prg86 = "C:\Program Files (x86)"
 $prof = "C:\Windows\System32\WindowsPowerShell\v1.0\Microsoft.PowerShell_profile.ps1"
 $profdir = "C:\Windows\System32\WindowsPowerShell\v1.0\"
-$myscripts = "C:\Users\kouey\Desktop\scripts"
+$myscripts = "C:\dev\tools\scripts"
 $emailaddress = "reesek@cdata.com"
-$test = "test"
