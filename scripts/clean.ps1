@@ -1,6 +1,6 @@
 #Requires -RunAsAdministrator
 param (
-
+    [string] $basepath = ""
 )
 function Clean-Path {
     param (
@@ -10,13 +10,11 @@ function Clean-Path {
     Push-Location $basepath
     $sum = Get-Sum
     Log "Removing $($sum/1000) KB from $basepath" $false $true
-    Clean
+    $actual = Clean
+    Status -Warning "OK" -Message "Removed $($actual/1000) kB from $basepath" -Color "Green"
     Pop-Location
 }
 function Get-Sum {
-    param(
-
-    )
     $sum = 0
     Get-ChildItem | % {
         $sum += $_.Length
@@ -24,33 +22,23 @@ function Get-Sum {
     return $sum
 }
 function Clean {
-    param (
-
-    )
     $sum = 0
     Get-ChildItem | % {
-        try { Remove-Item $_ -Recurse -Force -ErrorAction Stop }
-        catch  { WriteWarning -Message "Failed to remove file." -Color "Yellow" }
+        try { 
+            Remove-Item $_ -Recurse -Force -ErrorAction Stop;
+            $sum += $_.Length
+        }
+        catch  { Status -Message "File in use." -Color "Yellow" }
     }
-}
-function WriteWarning {
-    param (
-        [string] $warning,
-        [string] $message,
-        [string] $color
-    )
-    Log "[" $true $true
-    Log "Warning" $true $true -Color $color
-    Log "] " $true $true
-    Log $message $false $true 
+    return $sum
 }
 
 $systemp = "C:\Windows\Temp"
 $usrtemp = "C:\Users\$env:UserName\AppData\Local\Temp"
 
-Clean-Path $systemp
-Clean-Path $usrtemp
-
-
-
-
+if ($basepath) {
+    Clean-Path $basepath
+} else {
+    Clean-Path $systemp
+    Clean-Path $usrtemp
+}

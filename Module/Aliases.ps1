@@ -5,6 +5,5 @@ Set-Alias -Name mod -Value cdmod
 Set-Alias -Name dsk -Value cddesktop
 Set-Alias -Name tl -Value cdmyscripts
 Set-Alias -Name z -Value Stop-Computer
-Set-Alias -Name prf -Value openprof
-Set-Alias -Name so -Value callsearchox
-Set-Alias -Name to -Value callthesaurox
+Set-Alias -Name s -Value sendsms
+Set-Alias -Name thesaur -Value callthesaurox

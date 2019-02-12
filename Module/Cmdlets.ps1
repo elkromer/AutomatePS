@@ -39,7 +39,7 @@ function global:Get-Quote {
   .PARAMETER FileName
 	  Absolute path to file
   .EXAMPLE
-	  Create-File 
+	  New-File 1048576 "test.txt" 
   .NOTES
 	  1MB = 1,048,576 Bytes
 	  1GB = 1,048,576,000 Bytes
@@ -47,21 +47,21 @@ function global:Get-Quote {
     Author: Reese Krome
 		1/23/2019
 #>
-function New-File {
+function global:New-File {
 	[CmdletBinding()]
 	param (
 		[int] $Size,
 		[string] $FileName
 	)
-	
 	begin {
-		$f = New-Object System.IO.FileStream $Filename, Create, ReadWrite
-		$f.SetLength($Size)
-		$f.Close()
+	
 	}
 	process {
+		$f = New-Object System.IO.FileStream $Filename, Create, ReadWrite
+		$f.SetLength($Size)
 	}
 	end {
+		$f.Close()
 	}
 }
 <#
@@ -102,116 +102,30 @@ function global:Get-IPLocation {
 }
 <#
   .SYNOPSIS
-    Most significant earthquakes of the past month
+    Gets the most significant earthquakes of the past month
   .DESCRIPTION
     Uses the USGS Earthquake Explorer ATOM Syndication API to display the most significant earthquakes of the past month.
   .EXAMPLE
 	  Get-SignificantQuakes
   .NOTES
+	No credentials needed!
+  
     Author: Reese Krome 
 	1/19/2019
 #>
 function global:Get-SignificantQuakes {
-    [CmdletBinding()]
-    param (
-    )  
-    begin {
-    }
-    process { 
-        $myparameters=@{ uri="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.atom"}
-    
-        $response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
-		
-		$ob = ($response.Objects.Object."`#text") # Special naming conventions for a level of the response
-
-		$xml=[xml]$ob # Creates an object we can parse
-
-		$xml.feed.entry | % {
-			Log "[$($_.updated)] " $true $true -Color "Blue"
-			Log "$($_.title) " $true $true -Color "Green"
-			$depth = ($_.elev/100).ToString() + " km"
-			Log "Elev $depth " $true $true -Color "Red"
-			Log "<$($_.point)>" $false $true
-		}
-    }
-    end {
-    }
-}
-<#
-  .SYNOPSIS
-    All earthquakes of the past month
-  .DESCRIPTION
-    Uses the USGS Earthquake Explorer ATOM Syndication API to display all earthquakes in the past month.
-  .EXAMPLE
-	  Get-MonthlyQuakes
-  .NOTES
-    Author: Reese Krome 
-	1/19/2019
-#>
-function global:Get-MonthlyQuakes {
-    [CmdletBinding()]
-    param (
-    )  
-    begin {
-    
-    }
-    process { 
-        $myparameters=@{ uri="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.atom"}
-    
-        $response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
-				
-				$ob = ($response.Objects.Object."`#text") # Special naming conventions for a level of the response
-
-				$xml=[xml]$ob # Creates an object we can parse
-
-				$xml.feed.entry | % {
-					Log "[$($_.updated)] " $true $true -Color "Blue"
-					Log "$($_.title) " $true $true -Color "Green"
-					$depth = ($_.elev/100).ToString() + " km"
-					Log "Elev $depth " $true $true -Color "Red"
-					Log "<$($_.point)>" $false $true
-				}
-    }
-    end {
-    }
-}
-<#
-  .SYNOPSIS
-    All earthquakes in the past hour
-  .DESCRIPTION
-    Uses the USGS Earthquake Explorer ATOM Syndication API to display all earthquakes in the past hour.
-  .EXAMPLE
-	  Get-HourlyQuakes
-  .NOTES
-    Author: Reese Krome 
-	1/19/2019
-#>
-function global:Get-HourlyQuakes {
-    [CmdletBinding()]
-    param (
-    )  
-    begin {
-    
-    }
-    process { 
-        $myparameters=@{ uri="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.atom"}
-    
-        $response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
-		
-		$ob = ($response.Objects.Object."`#text") # Special naming conventions for a level of the response
-
-		$xml=[xml]$ob # Creates an object we can parse
-
-		$xml.feed.entry | % {
-			Log "[$($_.updated)] " $true $true -Color "Blue"
-			Log "$($_.title) " $true $true -Color "Green"
-			$depth = ($_.elev/100).ToString() + " km"
-			Log "Elev $depth " $true $true -Color "Red"
-			Log "<$($_.point)>" $false $true
-		}
-    }
-    end {
-    }
+	$myparameters=@{ uri="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.atom"}
+	$response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | ConvertTo-XML # Creates an object we can parse
+	$ob = ($response.Objects.Object."`#text") # Special naming conventions for a level of the response
+	
+	$xml=[xml]$ob # Creates an object we can parse
+	$xml.feed.entry | % {
+		Log "[$($_.updated)] " $true $true -Color "Green"
+		Log "$($_.title) " $true $true -Color "Green"
+		$depth = ($_.elev/100).ToString() + " km"
+		Log "Elev $depth " $true $true -Color "Green"
+		Log "<$($_.point)>" $false $true
+	}
 }
 <#
   .SYNOPSIS
@@ -223,6 +137,8 @@ function global:Get-HourlyQuakes {
   .EXAMPLE
     Thesaur-Ox "ace"
   .NOTES
+	Credentials obtained from https://developer.oxforddictionaries.com/
+  
     Author: Reese Krome
 	1/19/2019
 #>
@@ -230,63 +146,26 @@ function global:Thesaur-Ox {
     [CmdletBinding()]
     param (
         [string] $Word,
-        [switch] $p = $false
+        [switch] $p = $false,
+		[string] $app_id = "abc065da",
+		[string] $app_key = "4900d99da86add0fac5b9bcfe6cb6352"
     )  
-    begin {
-    
-    }
-    process { 
-        $myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/entries/en/$Word/synonyms";
-            ContentType = "application/json"}
-    
-        $Response = (Invoke-WebRequest @myparameters -UseBasicParsing -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
+	$myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/entries/en/$Word/synonyms";
+		ContentType = "application/json"}
+	
+	try {
+		$Response = (Invoke-WebRequest @myparameters -UseBasicParsing -Headers @{ app_id=$app_id; app_key=$app_key}).Content | ConvertFrom-Json		
 		
 		$Response.results[0].lexicalEntries | ForEach-Object {
 			$_.Entries[0].senses.synonyms | % {
 				Log "$($_.Text)" $false $true -Color "Green"
 			}
 		}
-    }
-    end {
-		#return $Response.results
-    }
-}
-<#
-  .SYNOPSIS
-    Searches words
-  .DESCRIPTION
-    Uses the oxford dictionary API to search for words
-  .PARAMETER Word
-    The search term
-  .PARAMETER p
-    A switch parameter that indicates whether the search term is a prefix
-  .EXAMPLE
-    Search-Ox "fuc" -p
-  .NOTES
-    Author: Reese Krome
-	1/19/2019
-#>
-function global:Search-Ox {
-    [CmdletBinding()]
-    param (
-        [string] $Word,
-        [switch] $p = $false
-    )  
-    begin {
-    
-    }
-    process { 
-        $myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/search/en?q=$Word&prefix=true";
-            ContentType = "application/json"}
-    
-        $Response = (Invoke-WebRequest @myparameters -UseBasicParsing -Headers @{ app_id="abc065da"; app_key="4900d99da86add0fac5b9bcfe6cb6352"}).Content | ConvertFrom-Json
-        $Response.results | % {
-            Log "$($_.word)" $false  $true -Color "Green"
-        }    
-    }
-    end {
-		#return $Response.results
-    }
+	} catch [System.Net.WebException]{
+		Status "Web request failed. $($_.Exception.Message)" "WebException" "Red"
+	} catch [Exception] {
+		Status "An unknown exception occured." "Exception" "Red"
+	}
 }
 <#
 	.SYNOPSIS
@@ -300,19 +179,12 @@ function global:Search-Ox {
 	.PARAMETER <Extension>
 		File extension of the log file
 	.EXAMPLE
-		ADD-LOG "C:\temp" "mylogfile" ".log"
-	.INPUTS
-		
-	.OUTPUTS
-		The string name of the newly created log file
-		The success or failure of the cmdlet
-	.LINK
-		https://goo.gl/DQG6RA
+		Add-Log "C:\temp" "mylogfile" ".log"
 	.NOTES
 		Author: Reese Krome
 		Email: reesek@cdata.com
 #>
-function global:ADD-LOG {
+function global:Add-Log {
 	[CmdletBinding(
 		DefaultParameterSetName="Preface",
 		SupportsShouldProcess=$True
@@ -343,133 +215,6 @@ function global:ADD-LOG {
 
 	}
 }
-
-<#
-.SYNOPSIS
-Returns $true if the given value is present in the script's storage, or $false
-otherwise.
-
-.EXAMPLE
-if (Test-LocalStorage -Key "credential") {
-    # Key present
-} else {
-    # Key not present
-}
-
-.NOTES
-The method used for detecting the current script doesn't work from within
-PSOutlook, so you'll need to explicitly pass a -Script parameter or assign
-the $defaultLocalStorageScript variable.
-
-Test-LocalStorage -Script "mytool" -Key "credential"
-#>
-function global:TEST-LOCALSTORAGE {
-	[CmdletBinding()]
-	param (
-		[string] $script = $defaultLocalStorageScript,
-		[Parameter(Mandatory=$true)]
-		[string] $key,
-		[string] $settingsDir = "$env:USERPROFILE\.psscripts"
-	) 
-	If (($script -eq "") -or ($key -eq "") -or ($settingsDir -eq "")) {
-			Throw "Test-LocalStorage requires non-empty -Script, -Key and -SettingsDir"
-	}
-
-	$scriptPath = "$settingsDir\$script.conf"
-	If (!(Test-Path $scriptPath -Type Leaf)) {
-			return $false
-	}
-
-	(Import-CliXml $scriptPath).Containskey($key)
-}
-
-<#
-.SYNOPSIS
-Retrieves a value from the script's local storage, returning $null if none is
-found.
-
-.EXAMPLE
-$cred = Get-LocalStorage -Key "credential"
-
-.NOTES
-The method used for detecting the current script doesn't work from within
-PSOutlook, so you'll need to explicitly pass a -Script parameter or assign
-the $defaultLocalStorageScript variable.
-
-Get-LocalStorage -Script "mytool" -Key "credential"
-#>
-function global:GET-LOCALSTORAGE {
-	[CmdletBinding()]
-	param (
-    [string] $script = $defaultLocalStorageScript,
-    [Parameter(Mandatory=$true)]
-    [string] $key,
-    [string] $settingsDir = "$env:USERPROFILE\.psscripts"
-	) 
-    If (($script -eq "") -or ($key -eq "") -or ($settingsDir -eq "")) {
-        Throw "Get-LocalStorage requires non-empty -Script, -Key and -SettingsDir"
-    }
-
-    If (!(Test-Path $settingsDir -Type Container)) {
-        mkdir $settingsDir > $null
-    }
-
-    $scriptPath = "$settingsDir\$script.conf"
-    if (!(Test-LocalStorage -Script $script -Key $key -SettingsDir $settingsDir)) {
-        return $null;
-    }
-
-    $scriptHash = Import-CliXml $scriptPath
-    If (!($scriptHash.ContainsKey($key))) {
-        return $null;
-    }
-
-    return $scriptHash[$key];
-}
-
-<#
-.SYNOPSIS
-Puts a value into the script's local storage.
-
-.EXAMPLE
-Set-LocalStorage -Key "credential" -Value (Get-Credential)
-
-.NOTES
-The method used for detecting the current script doesn't work from within
-PSOutlook, so you'll need to explicitly pass a -Script parameter or assign
-the $defaultLocalStorageScript variable.
-
-Set-LocalStorage -Script "mytool" -Key "credential" -Value (Get-Credential)
-#>
-function global:SET-LOCALSTORAGE {
-	[CmdletBinding()]
-	param (
-			[string] $script = $defaultLocalStorageScript,
-			[Parameter(Mandatory=$true)]
-			[string] $key,
-			[Parameter(Mandatory=$true)]
-			[PSObject] $value,
-			[string] $settingsDir = "$env:USERPROFILE\.psscripts"
-	) 
-	If (($script -eq "") -or ($key -eq "") -or ($settingsDir -eq "")) {
-			Throw "Set-LocalStorage requires non-empty -Script, -Key and -SettingsDir"
-	}
-
-	$scriptPath = "$settingsDir\$script.conf"
-	If (Test-Path $scriptPath -Type Leaf) {
-			$scriptHash = Import-CliXml $scriptPath
-	} Else {
-			$scriptHash = @{}
-	}
-
-	If (!(Test-Path $settingsDir -Type Container)) {
-			mkdir $settingsDir > $null
-	}
-
-	$scriptHash[$key] = $value
-	$scriptHash | Export-CliXml $scriptPath
-}
-
 <#
 .SYNOPSIS
   Prints the message to standard out.
@@ -489,16 +234,12 @@ function global:SET-LOCALSTORAGE {
 .NOTES
     If the message is a continuation of a previous call to 'Log', set the continuation parameter to withhold the date
 #>
-function global:LOG {
+function global:Log {
 	[CmdletBinding()]
 	param(
-		[Parameter(Position=0)]
 		$message, 
-		[Parameter(Position=1)]
 		[bool]$nonewline, 
-		[Parameter(Position=2)]
 		[bool]$continuation, 
-		[Parameter(Position=3)]
 		$color
 	) 
 	begin{}
@@ -515,24 +256,36 @@ function global:LOG {
 	}
 	end{}
 }
-
 <#
 .SYNOPSIS
-	Converts a username/password pair into a PS Credential object.
-
+	Prints a status message using Log
+.DESCRIPTION
+	Prints a status message to standard out with the specified settings.
+.PARAMETER Message
+	The status message
+.PARAMETER Warning
+	The short warning printed in the brackets
+.PARAMETER Color
+	A string color to print the warning.
 .EXAMPLE
-	$cred = ConvertTo-Credential -User "support@rssbus.com" -Password "p@$$w0rd"
+	Status -Warning "OK" -Message "Finished doing something" -Color "Green"
+	Status -Message "File in use" -Warning "Warning" -Color "Yellow"
+	Status "Failed to open resource" "Warn" "Yellow"
+.NOTES
+    Does not yet take pipeline input
 #>
-function global:CONVERTTO-CREDENTIAL(
-    [Parameter(Mandatory=$true)]
-    [string] $user,
-    [Parameter(Mandatory=$true)]
-    [string] $password
-) {
-    $secure = ConvertTo-SecureString -AsPlainText $password -Force
-    Return New-Object System.Management.Automation.PSCredential($user, $secure)
+function global:Status {
+	[CmdletBinding()]
+	param (
+		[string] $message,
+		[string] $warning = "Warning",
+		[string] $color
+	)
+	Log "[" $true $true
+	Log "$warning" $true $true -Color $color
+	Log "] " $true $true
+	Log "$message..." $false $true 
 }
-
 <#
 	.SYNOPSIS
 		Sets credentials for the SEND-SMS cmdlet to local storage. 
@@ -548,14 +301,13 @@ function global:CONVERTTO-CREDENTIAL(
 		Author: Reese Krome
 		Email: reesek@cdata.com
 #>
-function global:SET-SMSCREDENTIALS {
+function global:Set-SMSCredentials {
 	param(
 		[string] $GMail="reesek@cdata.com",
 		[string] $GMailPassword="82ozriozoo"
 	)
 	$Script:SMSCredentials = CONVERTTO-CREDENTIAL $GMail $GMailPassword
 }
-
 <#
 	.SYNOPSIS
 		This script sends a text to a phone over email using credentials from local storage
@@ -580,8 +332,7 @@ function global:SET-SMSCREDENTIALS {
 		Author: Reese
 		Creation Date: 6/19/2018
 #>
-
-function global:SEND-SMS {
+function global:Send-SMS {
 	#[CmdletBinding()]
 	param(
 		$Message = "",
@@ -624,7 +375,6 @@ function global:SEND-SMS {
 		Log "DONE" $false $false "green"
 	}
 }
-
 <#
 	.SYNOPSIS
 		Makes a symbolic link to a file
@@ -640,10 +390,9 @@ function global:SEND-SMS {
 		Author: Reese Krome
 		Email: reesek@cdata.com
 #>
-function global:MAKE-SYMLINK ($link, $target) {
+function global:Make-Symlink ($link, $target) {
     New-Item -Path $link -ItemType SymbolicLink -Value $target
 }
-
 <#
 	.SYNOPSIS
 		Makes a junction to a directory
@@ -659,47 +408,6 @@ function global:MAKE-SYMLINK ($link, $target) {
 		Author: Reese Krome
 		Email: reesek@cdata.com
 #>
-
-function global:MAKE-JUNCTION ($link, $target) {
+function global:Make-Junction ($link, $target) {
     New-Item -Path $link -ItemType Junction -Value $target
-}
-<#
-	.SYNOPSIS
-		Build visual studio project in current directory
-	.DESCRIPTION
-		This cmdlet uses the dev console to rebuild the visual studio project in the current directory and pushes the location to the directory with the executable
-	.PARAMETER <proj>
-		The project name to build
-	.PARAMETER <mode>
-		The mode to build. either Debug or Release
-	.EXAMPLE
-		Build-CS
-		Build-CS myproject.csproj Release
-	.NOTES
-		Author: Reese Krome
-		Email: reesek@cdata.com
-#>
-function global:BUILD-CS($proj, $mode) {
-	if ($proj -eq $null -or $proj -eq "") {
-		$proj = "tests.csproj"
-	}
-	if ($mode -eq $null -or $mode -eq "") {
-		$mode = "Debug"
-	}
-	$mypath = (Get-Item -Path ".\").FullName
-	Log "Building $proj..." $true $false
-	if (test-path $proj) {
-		Get-ChildItem -Path ".\bin" -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force
-		#Log "`nRun-Process $vs17path $mypath\$proj /Rebuild $mode" $false $true "yellow"
-		$retcode = Run-Process $vs17path "$mypath\$proj /Rebuild $mode" 
-		if ($retcode) {Log "Failed!" $false $true "red"} else 
-		{
-			Log "OK" $false $true "green"
-			Push-Location bin\$mode
-		}
-	} 
-	else 
-	{
-		Log "No project file found." $false $true "Red"
-	}
 }
