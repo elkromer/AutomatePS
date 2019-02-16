@@ -1,5 +1,5 @@
 #
-# Script Module file for AutomatePS module.
+# Script Module file for AutomatePS v1.216 module.
 #
 # Copyright (c) 2017 Reese Krome
 #
