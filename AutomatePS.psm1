@@ -4,11 +4,10 @@
 # Copyright (c) 2017 Reese Krome
 #
 
-. "$PSScriptRoot\Fnf\fields.ps1"
-. "$PSScriptRoot\Fnf\functions.ps1"
-. "$PSScriptRoot\Module\optimize.ps1"
-. "$PSScriptRoot\Module\cmdlets.ps1"
-. "$PSScriptRoot\Module\location.ps1"
-. "$PSScriptRoot\Module\support.ps1"
+. "$PSScriptRoot\fnf\fields.ps1"
+. "$PSScriptRoot\fnf\functions.ps1"
+. "$PSScriptRoot\modules\cmdlets.ps1"
+. "$PSScriptRoot\modules\location.ps1"
+. "$PSScriptRoot\modules\support.ps1"
 
-Export-ModuleMember -Alias * -Function * -Cmdlet * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, myscripts, emailaddress
+Export-ModuleMember -Alias * -Function * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, myscripts, emailaddress

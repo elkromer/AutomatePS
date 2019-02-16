@@ -28,7 +28,7 @@ function Clean {
             Remove-Item $_ -Recurse -Force -ErrorAction Stop;
             $sum += $_.Length
         }
-        catch  { Status -Message "File in use." -Color "Yellow" }
+        catch  { Status "File in use." "Warning" -Color "Yellow" }
     }
     return $sum
 }
