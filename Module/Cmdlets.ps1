@@ -16,15 +16,15 @@ function global:Get-Quote {
 	begin {
 	}
 	process { 
-			$rand = Get-Random -Maximum 400000;
+		$rand = Get-Random -Maximum 400000;
 
-			$myparameters=@{ uri="http://api.forismatic.com/api/1.0/?method=getQuote&key=$rand&format=json&lang=en"}
-	
-			$response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
-	
-			$resp = ConvertFrom-JSON $response.Objects.Object.'#text'
-			Log "$($resp.'quoteText')" $true $true -Color "Green"
-			Log "~$($resp.'quoteAuthor')" $false $true -Color "Green"
+		$myparameters=@{ uri="http://api.forismatic.com/api/1.0/?method=getQuote&key=$rand&format=json&lang=en"}
+
+		$response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | Convertto-xml # Creates an object we can parse
+
+		$resp = ConvertFrom-JSON $response.Objects.Object.'#text'
+		Log "$($resp.'quoteText')" $true $true -Color "Green"
+		Log "~$($resp.'quoteAuthor')" $false $true -Color "Green"
 	}
 	end {
 	}
@@ -182,95 +182,6 @@ function global:Status {
 	Log "$warning" $true $true -Color $color
 	Log "] " $true $true
 	Log "$message..." $false $true 
-}
-<#
-	.SYNOPSIS
-		Sets credentials for the SEND-SMS cmdlet to local storage. 
-	.DESCRIPTION
-		This function uses the ConvertTo-Credential function to convert the specified GMail email and password to a PSCredential. It then sets the credential to a global variable that may be used throughout the powershell session.
-	.PARAMETER <GMail>
-		A GMail email account from which the SMS should be sent.
-	.PARAMETER <GMailPassword>
-		A plaintext GMailPassword for the specified account
-	.EXAMPLE
-		Set-SmsCredentials -Gmail "reesek@cdata.com" -GmailPassword "pass"
-	.NOTES
-		Author: Reese Krome
-		Email: reesek@cdata.com
-#>
-function global:Set-SMSCredentials {
-	param(
-		[string] $GMail="reesek@cdata.com",
-		[string] $GMailPassword="82ozriozoo"
-	)
-	$Script:SMSCredentials = CONVERTTO-CREDENTIAL $GMail $GMailPassword
-}
-<#
-	.SYNOPSIS
-		This script sends a text to a phone over email using credentials from local storage
-	.DESCRIPTION
-		This cmdlet uses the NetCmdlets module to send an email with the Gmail credentials created in the Set-SmsCredentials function. A string carrier is specified to index into a dictionary of carrier endpoints used to send the email. Cell phones can receive messages by sending an email to PHONENUMBER@carrier.endpoint.com. An image attachment can be specified with the -File parameter.
-	.PARAMETER Message
-		SMS Message text
-	.PARAMETER File	
-		File attachment
-	.PARAMETER Number
-		Phone number to send to
-	.PARAMETER Carrier
-		Phone carrier, each has a different email endpoint
-	.PARAMETER From
-		Where the message should appear to originate
-	.EXAMPLE
-		.\send-sms -Message "test" -Number 123456789 -Carrier ATT -Server smtp.gmail.com -MyCreds $PSCredential
-		.\send-sms -File c:\temp\file.png -Number 123456789 -Carrier Verizon -Server smtp.gmail.com
-	.NOTES	
-		Verizon is the default carrier. smtp.gmail.com is the default email server. 
-	
-		Author: Reese
-		Creation Date: 6/19/2018
-#>
-function global:Send-SMS {
-	#[CmdletBinding()]
-	param(
-		$Message = "",
-		$Number = @("9196217286"),
-		$File = "",
-		$mycreds = "",
-		$Server = "smtp.gmail.com",
-		$SSL = "explicit",
-			$Carrier = "Verizon",
-		$CarrierDict = @{
-			ATT = "mms.att.net";
-			TMobile = "tmomail.net";
-			Verizon = "vzwpix.com";
-			Sprint = "pm.sprint.com";
-			VirginMobile = "vmpix.com";
-			Tracfone = "mmst5.tracfone.com";
-			MetroPCS = "mymetropcs.com";
-			BoostMobile = "myboostmobile.com";
-			Cricket = "mms.cricketwireless.com";
-			GoogleFi = "msg.fi.google.com";
-			USCellular = "mms.uscc.net";
-			Ting = "message.ting.com";
-			ConsumerCellular = "mailmymobile.net";
-			CSpire = "cspire1.com";
-			PagePlus = "vtext.com"
-		}
-
-	)
-	if (!$SMSCredentials){
-			Throw "Please set your sms credentials before using this script"
-	}
-
-	foreach ($num in $Number){
-		Log "Sending message to $($num)... " $true $true
-		if ($File){
-			send-email -Credential $SMSCredentials -server $Server -from $emailaddress -to "$num@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" -attachment "$File" > $null
-		} else {
-			send-email -Credential $SMSCredentials -server $Server -from $emailaddress -to "$num@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" > $null
-		}
-		Log "DONE" $false $false "green"
-	}
 }
 <#
 	.SYNOPSIS
