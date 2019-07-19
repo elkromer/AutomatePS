@@ -19,8 +19,8 @@ function global:Thesaur-Ox {
     param (
         [string] $Word,
         [switch] $p = $false,
-		[string] $app_id = "",
-		[string] $app_key = ""
+		[string] $app_id = "abc065da",
+		[string] $app_key = "4900d99da86add0fac5b9bcfe6cb6352"
     )  
 	$myparameters=@{ uri="https://od-api.oxforddictionaries.com/api/v1/entries/en/$Word/synonyms";
 		ContentType = "application/json"}
