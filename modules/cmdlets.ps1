@@ -41,8 +41,8 @@ function global:Get-Quote {
   .EXAMPLE
 	  New-File 1048576 "test.txt" 
   .NOTES
-	  1MB = 1,048,576 Bytes
-	  1GB = 1,048,576,000 Bytes
+	  1MB = 1048576 Bytes
+	  1GB = 1048576000 Bytes
 
     Author: Reese Krome
 		1/23/2019
@@ -50,14 +50,15 @@ function global:Get-Quote {
 function global:New-File {
 	[CmdletBinding()]
 	param (
-		[int] $Size,
+		[int64] $Size,
 		[string] $FileName
 	)
 	begin {
 	
 	}
 	process {
-		$f = New-Object System.IO.FileStream $Filename, Create, ReadWrite
+		"Creating new file of size $Size B"
+		$f = [io.file]::Create($FileName)
 		$f.SetLength($Size)
 	}
 	end {

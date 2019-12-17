@@ -58,6 +58,5 @@ function ConvertFrom-b64([string] $message){
 function cdprogramfiles {Set-Location $prg}
 function cdprogramfiles86 {Set-Location $prg86}
 function cddesktop {Set-Location $desktop}
-function cdmyscripts {Set-Location $myscripts}
 function cdmod {Set-Location $mod}
 function callthesaurox ([string] $query) {Thesaur-Ox $query}

@@ -10,4 +10,4 @@
 . "$PSScriptRoot\modules\location.ps1"
 . "$PSScriptRoot\modules\support.ps1"
 
-Export-ModuleMember -Alias * -Function * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, myscripts, emailaddress
+Export-ModuleMember -Alias * -Function * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, emailaddress

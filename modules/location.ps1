@@ -62,21 +62,21 @@ function global:Get-IPLocation {
         $myparameters=@{ uri="https://ipapi.co/$ip/json/ "}
         
 		try {
-			$Response = (Invoke-WebRequest @myparameters -UseBasicParsing).Content | ConvertFrom-Json
-		} catch { Status "Web request failed: $($_.Message)" "FAIL" "RED"; return } 
-		Status "Request ok." "OK" "GREEN"
-		$locationobj = @{
-			"LATLON" = "$($Response.latitude) $($Response.longitude)";
-			"ADDRESS" = "$($Response.ip)";
-			"CITY" = "$($Response.city)";
-			"REGION" = "$($Response.region)";
-			"POSTAL" = "$($Response.postal)";
-			"COUNTRY" = "$($Response.country_name)";
-			"CURRENCY" = "$($Response.currecny)";
-		}
-    	Set-Clipboard -Value $locationobj.LATLON
-		$locationobj
-		$locationobj = @{}
+			$Response = (Invoke-WebRequest @myparameters -UseBasicParsing -ErrorAction Stop).Content | ConvertFrom-Json
+			$locationobj = @{
+				"LATLON" = "$($Response.latitude) $($Response.longitude)";
+				"ADDRESS" = "$($Response.ip)";
+				"CITY" = "$($Response.city)";
+				"REGION" = "$($Response.region)";
+				"POSTAL" = "$($Response.postal)";
+				"COUNTRY" = "$($Response.country_name)";
+				"CURRENCY" = "$($Response.currecny)";
+			}
+			return $locationobj
+			Set-Clipboard -Value $locationobj.LATLON
+		} catch { 
+			Write-Error "Web request failed: $($_.Message)"
+		} 
 	}
 }
 <#
