@@ -4,8 +4,8 @@
 # Copyright (c) 2017 Reese Krome
 #
 
-. "$PSScriptRoot\fnf\fields.ps1"
-. "$PSScriptRoot\fnf\functions.ps1"
+. "$PSScriptRoot\Lib\fields.ps1"
+. "$PSScriptRoot\Lib\functions.ps1"
 . "$PSScriptRoot\modules\cmdlets.ps1"
 . "$PSScriptRoot\modules\location.ps1"
 . "$PSScriptRoot\modules\support.ps1"
