@@ -55,8 +55,15 @@ function ConvertFrom-b64([string] $message){
 .DESCRIPTION
 	Alias functions
 #>
+
 function cdprogramfiles {Set-Location $prg}
 function cdprogramfiles86 {Set-Location $prg86}
 function cddesktop {Set-Location $desktop}
 function cdmod {Set-Location $mod}
+function cdcompose {Set-Location $compose}
 function callthesaurox ([string] $query) {Thesaur-Ox $query}
+function tclsearch([string] $path, [string] $glob) {
+	Push-Location $mod/scripts
+	tcl search.tcl $path $glob
+	Pop-Location
+}

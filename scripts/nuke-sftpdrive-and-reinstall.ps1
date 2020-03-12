@@ -15,7 +15,9 @@ If (Test-Path -Path "HKLM:\Software\nsoftware\SFTPDrive") {
   Status "No HKLM configuration present." "OK" "Yellow"
 }
 
-Start-Process -FilePath "C:\Program Files\nsoftware\SFTP Drive V2\uninstall.exe" -Verb RunAs -ArgumentList "/S" -Wait -ErrorAction Stop 
+Start-Process -FilePath "C:\Program Files\nsoftware\SFTP Drive V2\uninstall.exe" -Verb RunAs -ArgumentList "/S" -Wait -ErrorAction Stop
+# TODO: Uninstall CBFS Drivers
+
 Status "Successfully uninstalled SFTP Drive." "OK" "Green"
 
 fp ndx2a -i -silent

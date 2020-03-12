@@ -50,10 +50,12 @@ try {
   Status "Docker Desktop already running." "OK" "Yellow"
 } catch [Microsoft.PowerShell.Commands.ProcessCommandException] {
   Start-Process -FilePath $dockerDesktopPath -Verb RunAs -ErrorAction Stop
-  Status "Docker Desktop starting..." "OK" "Yellow"
-  Test-DockerDesktop
-  Status "Docker Desktop started." "OK" "Green"
 }
+
+# Build the container
+Status "Docker Desktop starting..." "OK" "Yellow"
+Test-DockerDesktop
+Status "Docker Desktop started." "OK" "Green"
 
 # Start the container
 $retcode = (docker run -p "$dockerExternalPort`:$dockerInternalPort" -d -t lpcontainer)
