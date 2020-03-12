@@ -112,8 +112,8 @@ function global:CONVERTTO-CREDENTIAL(
 #>
 function global:Set-SMSCredentials {
 	param(
-		[string] $GMail="reesek@cdata.com",
-		[string] $GMailPassword="mmmnbanana"
+		[string] $GMail="reesek@nsoftware.com",
+		[string] $GMailPassword="dT12#^vTl0Ky"
 	)
 	$Script:SMSCredentials = CONVERTTO-CREDENTIAL $GMail $GMailPassword
 }

@@ -4,6 +4,7 @@
 # Copyright (c) 2017 Reese Krome
 #
 
+. "$PSScriptRoot\Lib\init.ps1"
 . "$PSScriptRoot\Lib\fields.ps1"
 . "$PSScriptRoot\Lib\functions.ps1"
 . "$PSScriptRoot\Modules\cmdlets.ps1"

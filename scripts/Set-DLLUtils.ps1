@@ -1,8 +1,8 @@
 . $toolspath\common.ps1
 $v10releasepath = "C:\dev\branches\v10\Release"
 $v20releasepath = "C:\dev\branches\v20\Release"
-$v10path = "C:\dev\branches\v10";
-$v20path = "C:\dev\branches\v20";
+$v10 = "C:\dev\branches\v10";
+$v20 = "C:\dev\branches\v20";
 Function Get-FileMetaData { 
   <# 
    .Synopsis 
