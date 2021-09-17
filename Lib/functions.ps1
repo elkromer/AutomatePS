@@ -37,9 +37,7 @@ function Remove-Containers(){
 function Stop-Containers(){ 
 	docker stop $(docker ps -aq) 
 }
-function Start-PerformanceTest(){
-	Set-SftpDriveBinPath; .\tests.exe
-}
+
 function Convert-b64([string] $message) {
 	$Bytes = ([System.Text.Encoding]::Unicode.GetBytes($message))
 	return [Convert]::ToBase64String($Bytes)

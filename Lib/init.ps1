@@ -36,8 +36,9 @@ $hom          = "C:\Users\$env:UserName"
 $prg          = "C:\Program Files"
 $prg86        = "C:\Program Files (x86)"
 $tools        = "C:\dev\tools\scripts"
-$emailaddress = "reesek@nsoftware.com"
-$smsemail     = "hkrome26@gmail.com"
+$sub          = ""
+$emailaddress = ""
+$smsemail     = ""
 $smspass      = ""
 $phone        = ""
 $phonecarrier = ""
@@ -58,25 +59,16 @@ function cddesktop { Set-Location $desktop }
 function cdmod { Set-Location $mod }
 function cdscripts { Set-Location $scr }
 function Set-ToolsPath(){ Set-Location $tools }
-function Set-SftpDrivePerformanceLogPath(){ Set-Location $sftpdriveperformancelogpath }
-function Set-SftpDriveBinPath(){ Set-Location $sftpdrivebinpath }
 function Set-DockerPath(){ Set-Location $dockerpath }
-function Set-RabbitPath(){ Set-Location $rabbitctlpath }
-function Set-RabbitLogPath(){ Set-Location $rabbitlogpath }
 function Set-ReleasePath(){ Set-Location $v20releasepath }
 function Set-V10Path(){ Set-Location $v10 }
 function Set-V20Path(){ Set-Location $v20 }
 function Set-NsoftwarePath(){ Set-Location $nsoft }
-function Get-TailPerformanceLog(){ Set-SftpDrivePerformanceLogPath; Get-Content performance.txt -wait }
 function Set-NsoftwareDockerPath(){ Set-Location $ndockerpath }
-function Start-SFTPDrive(){ Start-Process $sftpdrivepath -ArgumentList "/start" }
 
 <#
 	.DESCRIPTION
 		Aliases that help with getting around and doing tasks
-	.NOTES
-		Author: Reese Krome
-		Email: reesek@cdata.com
 #>
 Set-Alias -Name z -Value Stop-Computer
 Set-Alias -Name s -Value Do-SendSMS
@@ -87,7 +79,6 @@ Set-Alias -Name dsk -Value cddesktop
 Set-Alias -Name cmp -Value cdcompose
 Set-Alias -Name vmip -Value Get-VMIPAddresses
 Set-Alias -Name find -Value Do-TclSearch
-Set-Alias -Name scripts -Value cdcompose
 Set-Alias -Name thesaur -Value Do-ThesaurusLookup
 Set-Alias -Name b -Value Search-Bugz
 Set-Alias -Name tl -Value Set-ToolsPath
@@ -102,8 +93,6 @@ Set-Alias -Name sku -Value Find-SKU -Scope Global
 Set-Alias -Name dock -Value Set-DockerPath
 Set-Alias -Name nsoft -Value Set-NsoftwarePath -Scope Global
 Set-Alias -Name ndock -Value Set-NsoftwareDockerPath
-Set-Alias -Name rabbit -Value Set-RabbitPath
-Set-Alias -Name rabbitlog -Value Set-RabbitLogPath
 Set-Alias -name nettest -value Start-Net -Scope Global
 Set-Alias -name cpptest -value Start-Cpp -Scope Global
 Set-Alias -name cppdtest -value Start-CppDebug -Scope Global
@@ -116,11 +105,8 @@ Set-Alias -Name release -Value Set-ReleasePath -Scope Global
 Set-Alias -Name gbndll -Value Get-DLLBuildNumbers -Scope Global
 Set-Alias -Name dlltime -Value Get-DLLModifiedTime -Scope Global
 Set-Alias -Name codetime -Value Get-CodeModifiedTime -Scope Global
-Set-Alias -Name perflog -Value Get-TailPerformanceLog
-Set-Alias -Name perfexe -Value Start-PerformanceTest
 Set-Alias -Name green -Value Format-GreenFolder
 Set-Alias -Name red -Value Format-RedFolder
 Set-Alias -Name cc -Value Remove-SetIcon
 Set-Alias -Name getuser -Value Get-UserFromSID
 Set-Alias -Name getsid -Value Get-SIDFromUser
-Set-Alias -Name drives -Value Start-SFTPDrive
