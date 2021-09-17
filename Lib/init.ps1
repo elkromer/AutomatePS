@@ -36,12 +36,12 @@ $hom          = "C:\Users\$env:UserName"
 $prg          = "C:\Program Files"
 $prg86        = "C:\Program Files (x86)"
 $tools        = "C:\dev\tools\scripts"
-$sub          = ""
-$emailaddress = ""
-$smsemail     = ""
-$smspass      = ""
-$phone        = ""
-$phonecarrier = ""
+$sub          = "XISUB-RA1SU-B6RHH-51541-6NZ3K"
+$emailaddress = "reesek@nsoftware.com"
+$smsemail     = "hkrome26@gmail.com"
+$smspass      = "4P5@fpKT5r"
+$phone        = "9196217286"
+$phonecarrier = "Verizon"
 $nsoft        = "$prg\nsoftware";
 $prof         = "$hom\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 $profdir      = "$hom\Documents\WindowsPowerShell\"
@@ -69,6 +69,9 @@ function Set-NsoftwareDockerPath(){ Set-Location $ndockerpath }
 <#
 	.DESCRIPTION
 		Aliases that help with getting around and doing tasks
+	.NOTES
+		TODO: 
+		- Fix browser-related aliases.
 #>
 Set-Alias -Name z -Value Stop-Computer
 Set-Alias -Name s -Value Do-SendSMS
