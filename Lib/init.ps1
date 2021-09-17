@@ -29,24 +29,24 @@ $v20NameMap.Add("sftpdrive", "C:\dev\branches\v20\SFTPDrive\tests")
 	.DESCRIPTION
 		Public Module fields. In order to be visible when module is loaded, variable must be added to the list in the script module file.
 #>
-$mod 						 = "$((Split-Path $PSScriptRoot -Parent))"
-$res 		   		 		 = "$((Split-Path $PSScriptRoot -Parent))\Resources"
-$scr 						 = "$((Split-Path $PSScriptRoot -Parent))\Scripts"
-$hom 						 = "C:\Users\$env:UserName"
-$prg 						 = "C:\Program Files"
-$prg86 						 = "C:\Program Files (x86)"
-$tools 						 = "C:\dev\tools\scripts"
-$emailaddress 				 = "reesek@nsoftware.com"
-$smsemail					 = "hkrome26@gmail.com"
-$smspass					 = ""
-$phone						 = ""
-$phonecarrier				 = ""
-$nsoft 				 		 = "$prg\nsoftware";
-$prof 						 = "$hom\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-$profdir 					 = "$hom\Documents\WindowsPowerShell\"
-$desktop 					 = "$hom\Desktop"
-$ndockerpath 				 = "$tools\docker\nsoftware";
-$dockerpath 				 = "$tools\docker\nsoftware\support"
+$mod          = "$((Split-Path $PSScriptRoot -Parent))"
+$res          = "$((Split-Path $PSScriptRoot -Parent))\Resources"
+$scr          = "$((Split-Path $PSScriptRoot -Parent))\Scripts"
+$hom          = "C:\Users\$env:UserName"
+$prg          = "C:\Program Files"
+$prg86        = "C:\Program Files (x86)"
+$tools        = "C:\dev\tools\scripts"
+$emailaddress = "reesek@nsoftware.com"
+$smsemail     = "hkrome26@gmail.com"
+$smspass      = ""
+$phone        = ""
+$phonecarrier = ""
+$nsoft        = "$prg\nsoftware";
+$prof         = "$hom\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+$profdir      = "$hom\Documents\WindowsPowerShell\"
+$desktop      = "$hom\Desktop"
+$ndockerpath  = "$tools\docker\nsoftware";
+$dockerpath   = "$tools\docker\nsoftware\support"
 
 <#
 .DESCRIPTION
