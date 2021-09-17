@@ -2,96 +2,60 @@
 	.DESCRIPTION
 		Alias functions that are not typically used from the command line. 
 #>
-<#
-	.SYNOPSIS
-		Send an SMS to the default number
-	.DESCRIPTION
-		Uses cmdlets from this module to set credentials and send an SMS.
-	.PARAMETER <msg>
-		The message to send
-	.EXAMPLE
-		sendsms "remember to go to the store"
-	.NOTES
-		Author: Reese Krome
-		Email: reesek@cdata.com
-#>
-function sendsms ([string] $msg) { SET-SMSCREDENTIALS; SEND-SMS $msg;}
-function rdp ([string] $domain) { mstsc /v:$domain}
-function openprof {notepad $prof}
-function Convert-b64([string] $message){
+function rdp ([string] $domain) { 
+	mstsc /v:$domain
+}
+function Do-ThesaurusLookup ([string] $query) {
+	Thesaur-Ox $query
+}
+function Do-OpenProfile {
+	notepad $prof
+}
+function Copy-PSWindow {
+	Start-Process powershell -ArgumentList "-NoExit cd $($(Get-Location).Path)"
+}
+function Get-VMIPAddresses(){
+  Invoke-Command -ScriptBlock {.\get-vmipaddresses.ps1} -ComputerName 10.0.1.177 -Credential $JokerCredential
+}
+function Get-DLLs() {
+	Push-Location $tools
+	. ./updatedlls.ps1
+	. ./updatecppdlls.ps1
+	. ./updatecpptestdlls.ps1
+	Pop-Location
+}
+function Do-SendSMS ([string] $msg) { 
+	Set-SMSCredentials; 
+	Send-SMS $msg;
+}
+function Clear-Containers(){ 
+	docker rmi $(docker images -q) 
+}
+function Remove-Containers(){ 
+	docker rm $(docker ps -aq) 
+}
+function Stop-Containers(){ 
+	docker stop $(docker ps -aq) 
+}
+function Start-PerformanceTest(){
+	Set-SftpDriveBinPath; .\tests.exe
+}
+function Convert-b64([string] $message) {
 	$Bytes = ([System.Text.Encoding]::Unicode.GetBytes($message))
 	return [Convert]::ToBase64String($Bytes)
 }
-function ConvertFrom-b64([string] $message){
+function ConvertFrom-b64([string] $message) {
 	return [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($message))
 }
-function global:Start-Net([string] $testname, [switch] $v10, [switch] $d){
-	try 
-	{
-		if ($d) { 
-			Log "(debug)`$v10NameMap -> $($v10NameMap.KEYS)`r`n" $false $true "Yellow"
-			Log "(debug)`$v20NameMap -> $($v20NameMap.KEYS)`r`n" $false $true "Yellow" 
-		}
-		if ($v10) { 
-			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v10NameMap.$testname "tests.csproj"  
-		}
-		else { 
-			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v20NameMap.$testname "tests.csproj" 
-		}	
-		devenv.exe $fullpath
-	} 
-	catch [System.Management.Automation.RuntimeException]
-	{
-		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
-	}
-}
-function global:Start-Cpp([string] $testname, [switch] $v10){
-	try 
-	{
-		if ($v10) { 
-			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests.cpp.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v10NameMap.$testname "tests.cpp.csproj"  
-		}
-		else { 
-			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests.cpp.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v20NameMap.$testname "tests.cpp.csproj" 
-		}	
-		devenv.exe $fullpath
-	} 
-	catch [System.Management.Automation.RuntimeException]
-	{
-		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
-	}
-}
-function global:Start-CppDebug([string] $testname, [switch] $v10){
-	try 
-	{
-		if ($v10) { 
-			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests-cpp.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v10NameMap.$testname "tests-cpp.csproj"  
-		}
-		else { 
-			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests-cpp.csproj" $false $true "Yellow" }
-			$fullpath = Join-Path $v20NameMap.$testname "tests-cpp.csproj" 
-		}	
-		devenv.exe $fullpath
-	} 
-	catch [System.Management.Automation.RuntimeException]
-	{
-		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
-	}
-}
-function global:Get-TestMaps(){
+function Get-TestMaps() {
+	# For Debugging Purposes
 	Log "=== V10 ===" $false $true
 	Log $v10NameMap.Keys $false $true
 	Log "=== V20 ===" $false $true
 	Log $v20NameMap.Keys $false $true
 }
-function global:Find-SKU ([string] $prod) {
-	try 
-	{
+function Find-SKU ([string] $prod) {
+	try {
 		$testpath = $v10NameMap.$prod 
 		if (!($testpath)) { $testpath = $v20NameMap.$prod   }
 		$parentpath = $testpath | Split-Path -Parent
@@ -101,13 +65,11 @@ function global:Find-SKU ([string] $prod) {
 		Status "Product not found in v10 or v20" "Fail" "Red"
 	}
 }
-function callthesaurox ([string] $query) {Thesaur-Ox $query}
-function tclsearch([string] $path, [string] $glob) {
+function Do-TclSearch([string] $path, [string] $glob) {
 	Push-Location $mod/scripts
 	tcl search.tcl $path $glob
 	Pop-Location
 }
-function Copy-PSWindow {Start-Process powershell -ArgumentList "-NoExit cd $($(Get-Location).Path)"}
 function Open-Bugz($number){
   $url = "https://b.cdata.com/bugz-ns/show_bug.cgi?id=$number"
   if ($number -lt 20000 -AND $number -gt 600){
@@ -118,17 +80,19 @@ function Get-NodeId {
   Start-Process -filepath "$tools\nodeid.exe" -ArgumentList "/s"
   Get-Clipboard
 }
-
-function Get-VMIPAddresses(){
-  Invoke-Command -ScriptBlock {.\get-vmipaddresses.ps1} -ComputerName 10.0.1.177 -Credential $JokerCredential
+function Get-SupportInfo([string] $query) {
+	$query = $query.Replace('"', '\"').Replace(' ', '+')
+	$mailurl = "https://mail.google.com/mail/u/2/?pli=1#search/$query "
+	$bugzurl = "https://b.cdata.com/bugz-ns/buglist.cgi?quicksearch=ALL+$query "
+	$kburl = "https://www.nsoftware.com/kb/?text=$query"
+	$url = $mailurl + $bugzurl + $kburl
+	Start-Process -FilePath $mozillapath -ArgumentList $url
 }
-<#
-	.DESCRIPTION
-		From WorkPS module
-#>
-function Clear-Containers(){ docker rmi $(docker images -q) }
-function Remove-Containers(){docker rm $(docker ps -aq)}
-function Stop-Containers(){ docker stop $(docker ps -aq)}
+function Search-Bugz([string] $query) {
+	$query = $query.Replace('"', '\"').Replace(' ', '+')
+	$bugzurl = "https://b.cdata.com/bugz-ns/buglist.cgi?quicksearch=$query&order=bug_id+DESC"
+	Start-Process -FilePath $mozillapath -ArgumentList $bugzurl
+}
 function Get-DockerTags($repo) {
 	$separator = $repo.IndexOf("/")
 	$account = $repo.Substring(0, $separator)
@@ -137,23 +101,6 @@ function Get-DockerTags($repo) {
 	$request.results | ForEach-Object {
 		$_.name
 	}
-}
-function Get-MoreInfo([string] $query) {
-	$query = $query.Replace('"', '\"').Replace(' ', '+')
-	$mailurl = "https://mail.google.com/mail/u/2/?pli=1#search/$query "
-	$bugzurl = "https://b.cdata.com/bugz-ns/buglist.cgi?quicksearch=ALL+$query "
-	$kburl = "https://www.nsoftware.com/kb/?text=$query"
-	$url = $mailurl + $bugzurl + $kburl
-	Start-Process -FilePath $mozillapath -ArgumentList $url
-}
-
-function Search-Bugz([string] $query){
-	$query = $query.Replace('"', '\"').Replace(' ', '+')
-	$bugzurl = "https://b.cdata.com/bugz-ns/buglist.cgi?quicksearch=$query&order=bug_id+DESC"
-	Start-Process -FilePath $mozillapath -ArgumentList $bugzurl
-}
-function Start-PerformanceTest(){
-	Set-SftpDriveBinPath; .\tests.exe
 }
 function Get-DLLBuildNumbers ([string] $query) {
 	# Gets the build number of the DLL in the release folder
@@ -240,15 +187,7 @@ function Get-DLLModifiedTime ([string] $query) {
 		}
 	}
 }
-function Get-DLLs() {
-	Push-Location $tools
-	. ./updatedlls.ps1
-	. ./updatecppdlls.ps1
-	. ./updatecpptestdlls.ps1
-	Pop-Location
-}
-# gets the last modified time of the product folder in the major version's code folder
-function Get-CodeModifiedTime([string] $query, [string] $version){
+function Get-CodeModifiedTime([string] $query, [string] $version) {
 	if ($query -like "sftpdrive"){
 		# This will break eventually
 		Push-Location "$v20/SFTPDrive"
@@ -297,7 +236,7 @@ function Get-CodeModifiedTime([string] $query, [string] $version){
 
 	}
 }
-function Get-SVNLog([string] $query, [string] $version){
+function Get-SVNLog([string] $query, [string] $version) {
 	if ($version -eq "v10") {
 		Push-Location "$v10\code"
 		if (Test-Path $query) {
@@ -342,19 +281,52 @@ function Get-SVNLog([string] $query, [string] $version){
 		}
 	}
 }
-
 function Get-UserFromSID([string] $sid) {
 	$objSID = New-Object System.Security.Principal.SecurityIdentifier($sid)
 	$objUser = $objSID.Translate( [System.Security.Principal.NTAccount])
 	$objUser.Value
 }
-
 function Get-SIDFromUser([string] $user) {
 	$objUser = New-Object System.Security.Principal.NTAccount($user)
 	$strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
 	$strSID.Value
 }
-
+<#
+	.SYNOPSIS
+		Makes a symbolic link to a file
+	.DESCRIPTION
+		Uses the New-Item cmdlet to create a new symbolic link to a file. 
+	.PARAMETER <Link>
+		The path of the new symbolic link to be created.
+	.PARAMETER <Target>
+		The path of the target of the symbolic link.
+	.EXAMPLE
+		Make-SymLink .\target.txt 'C:\temp\target.txt'
+	.NOTES
+		Author: Reese Krome
+		Email: reesek@cdata.com
+#>
+function Make-Symlink ($link, $target) {
+    New-Item -Path $link -ItemType SymbolicLink -Value $target
+}
+<#
+	.SYNOPSIS
+		Makes a junction to a directory
+	.DESCRIPTION
+		Uses the New-Item cmdlet to create a new folder juntion to a directory
+	.PARAMETER <Link>
+		The path of the new junction to be created
+	.PARAMETER <Target>
+		The path of the target directory
+	.EXAMPLE
+		Make-Junction .\junction 'C:\temp\junction'
+	.NOTES
+		Author: Reese Krome
+		Email: reesek@cdata.com
+#>
+function Make-Junction ($link, $target) {
+    New-Item -Path $link -ItemType Junction -Value $target
+}
 <# 
 	.SYNOPSIS 
 	This function sets a folder icon on specified folder. 
@@ -372,8 +344,7 @@ function Get-SIDFromUser([string] $user) {
 	.NOTES 
 	Created by Mark Ince on May 4th, 2014. Contact me at mrince@outlook.com if you have any questions. 
 #> 
-function Set-FolderIcon 
-{ 
+function Set-FolderIcon { 
     [CmdletBinding()] 
     param 
     (     
@@ -426,8 +397,7 @@ function Set-FolderIcon
         Set-Location $originallocale         
     } 
 } 
-function Remove-SetIcon 
-{ 
+function Remove-SetIcon { 
     [CmdletBinding()] 
     param 
     (     
@@ -457,8 +427,72 @@ function Remove-SetIcon
     } 
 }
 function Format-GreenFolder([string]$RelativePath) {
-	Set-FolderIcon -Icon "$resourcepath\folder_green.ico" -Path "$((Resolve-Path $RelativePath).Path)"
+	Set-FolderIcon -Icon "$res\folder_green.ico" -Path "$((Resolve-Path $RelativePath).Path)"
 }
 function Format-RedFolder([string]$RelativePath) {
-	Set-FolderIcon -Icon "$resourcepath\folder_red.ico" -Path "$((Resolve-Path $RelativePath).Path)"
+	Set-FolderIcon -Icon "$res\folder_red.ico" -Path "$((Resolve-Path $RelativePath).Path)"
+}
+<# 
+	.SYNOPSIS 
+	Opens visual studio to the csproj file to the unit tests. 
+	.DESCRIPTION 
+	Alias functions for opening visual studio.   
+#> 
+function Start-Net([string] $testname, [switch] $v10, [switch] $d){
+	try 
+	{
+		if ($d) { 
+			Log "(debug)`$v10NameMap -> $($v10NameMap.KEYS)`r`n" $false $true "Yellow"
+			Log "(debug)`$v20NameMap -> $($v20NameMap.KEYS)`r`n" $false $true "Yellow" 
+		}
+		if ($v10) { 
+			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v10NameMap.$testname "tests.csproj"  
+		}
+		else { 
+			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v20NameMap.$testname "tests.csproj" 
+		}	
+		devenv.exe $fullpath
+	} 
+	catch [System.Management.Automation.RuntimeException]
+	{
+		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
+	}
+}
+function Start-Cpp([string] $testname, [switch] $v10){
+	try 
+	{
+		if ($v10) { 
+			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests.cpp.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v10NameMap.$testname "tests.cpp.csproj"  
+		}
+		else { 
+			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests.cpp.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v20NameMap.$testname "tests.cpp.csproj" 
+		}	
+		devenv.exe $fullpath
+	} 
+	catch [System.Management.Automation.RuntimeException]
+	{
+		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
+	}
+}
+function Start-CppDebug([string] $testname, [switch] $v10){
+	try 
+	{
+		if ($v10) { 
+			if ($d) { Log "(debug) Join-Path $($v10NameMap.$testname) tests-cpp.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v10NameMap.$testname "tests-cpp.csproj"  
+		}
+		else { 
+			if ($d) { Log "(debug) Join-Path $($v20NameMap.$testname) tests-cpp.csproj" $false $true "Yellow" }
+			$fullpath = Join-Path $v20NameMap.$testname "tests-cpp.csproj" 
+		}	
+		devenv.exe $fullpath
+	} 
+	catch [System.Management.Automation.RuntimeException]
+	{
+		Status "There was an issue at runtime. Is the syntax correct? $($_.CategoryInfo)" "Fail" "Red"
+	}
 }
