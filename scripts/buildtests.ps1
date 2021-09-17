@@ -10,22 +10,7 @@ param(
 )
 $paths = New-Object System.Collections.Generic.List[System.Object]
 $v10prodnames = $subscriptionproducts.v10
-$v20prodnames = @(
-	"IPWorks",
-	"IPWorksAuth"
-	"IPWorksCloud",
-	"IPWorksEncrypt",
-	"IPWorksMQ",
-	"IPWorksOpenPGP",
-	"IPWorksP2P",
-	"IPWorksSFTP",
-	"IPWorksSFTPServer",
-	"IPWorksSMIME",
-	"IPWorksSSH",
-	"IPWorksWS",
-	"IPWorksZip",
-	"SFTPDrive"
-)
+$v20prodnames = $subscriptionproducts.v20
 
 foreach ($prod in $v10prodnames){
 	$paths.Add("C:\dev\branches\v10\$prod\tests") 
@@ -52,9 +37,9 @@ function Build-Tests {
 }
 
 Push-Location $tools
-.\updatedlls.ps1
-.\updatecppdlls.ps1
-.\updatecpptestdlls.ps1
+# .\updatedlls.ps1
+# .\updatecppdlls.ps1
+# .\updatecpptestdlls.ps1
 Pop-Location
 
 foreach ($testpath in $paths) {

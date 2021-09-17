@@ -13,10 +13,11 @@ $prg86 = "C:\Program Files (x86)"
 $prof = "C:\Users\$env:UserName\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 $sysprof = "C:\Windows\System32\WindowsPowerShell\v1.0\Microsoft.PowerShell_profile.ps1"
 $profdir = "C:\Users\$env:UserName\Documents\WindowsPowerShell\"
-$emailaddress = "reesek@cdata.com"
+$emailaddress = "reesek@nsoftware.com"
 $nsoftwarepath = "C:\Program Files\nsoftware";
 $mozillapath = "C:\Program Files\Mozilla Firefox\firefox.exe";
-$repos = "C:\Users\reese\source\repos"
+$sftpdrivepath = "C:\Program Files\nsoftware\SFTP Drive V2\SFTPDrive.exe";
+$repos = "C:\Users\$env:UserName\source\repos"
 <#
 	.DESCRIPTION
 	  From WorkPS
@@ -26,7 +27,7 @@ $resourcepath = "$((Split-Path $PSScriptRoot -Parent))\Resources"
 $scriptspath = "$((Split-Path $PSScriptRoot -Parent))\Scripts"
 $tools = "C:\dev\tools\scripts"
 $ndockerpath = "$tools\docker\nsoftware";
-$dockerpath = "$repos\docker"
+$dockerpath = "$tools\docker\nsoftware\support"
 $rabbitlogpath = "C:\Users\reese\AppData\Roaming\RabbitMQ\log"
 $rabbitctlpath = "C:\Program Files\RabbitMQ Server\rabbitmq_server-3.7.16\sbin"
 $sftpdriveperformancelogpath = "C:\dev\branches\v20\SFTPDrive\tests";
@@ -54,6 +55,7 @@ function Set-V20Path(){ Set-Location $v20  }
 function Set-NsoftwarePath(){ Set-Location $nsoftwarepath  }
 function Get-TailPerformanceLog(){Set-SftpDrivePerformanceLogPath; Get-Content performance.txt -wait}
 function Set-NsoftwareDockerPath(){ Set-Location $ndockerpath }
+function Start-SFTPDrive(){ Start-Process $sftpdrivepath -ArgumentList "/start" }
 
 <#
 	.DESCRIPTION
@@ -108,3 +110,6 @@ Set-Alias -Name perfexe -Value Start-PerformanceTest
 Set-Alias -Name green -Value Format-GreenFolder
 Set-Alias -Name red -Value Format-RedFolder
 Set-Alias -Name cc -Value Remove-SetIcon
+Set-Alias -Name getuser -Value Get-UserFromSID
+Set-Alias -Name getsid -Value Get-SIDFromUser
+Set-Alias -Name drives -Value Start-SFTPDrive

@@ -112,8 +112,8 @@ function global:CONVERTTO-CREDENTIAL(
 #>
 function global:Set-SMSCredentials {
 	param(
-		[string] $GMail="reesek@nsoftware.com",
-		[string] $GMailPassword="dT12#^vTl0Ky"
+		[string] $GMail="hkrome26@gmail.com",
+		[string] $GMailPassword="4P5@fpKT5r"
 	)
 	$Script:SMSCredentials = CONVERTTO-CREDENTIAL $GMail $GMailPassword
 }
@@ -145,12 +145,15 @@ function global:Send-SMS {
 	#[CmdletBinding()]
 	param(
 		$Message = "",
-		$Number = @("9196217286"),
+		$Number = "9196217286",
 		$File = "",
+		$LogFile = "c:\sendsms.log",
 		$mycreds = "",
-		$Server = "smtp.gmail.com",
+		$Server = "smtp.gmail.com", 
+		$Port = 587,
 		$SSL = "explicit",
-			$Carrier = "Verizon",
+		$Timeout = 20,
+		$Carrier = "Verizon",
 		$CarrierDict = @{
 			ATT = "mms.att.net";
 			TMobile = "tmomail.net";
@@ -174,13 +177,12 @@ function global:Send-SMS {
 			Throw "Please set your sms credentials before using this script"
 	}
 
-	foreach ($num in $Number){
-		Log "Sending message to $($num)... " $true $true
-		if ($File){
-			send-email -Credential $SMSCredentials -server $Server -from $emailaddress -to "$num@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" -attachment "$File" > $null
-		} else {
-			send-email -Credential $SMSCredentials -server $Server -from $emailaddress -to "$num@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" > $null
-		}
-		Log "DONE" $false $false "green"
+	Log "Sending message to $Number via $Server`:$Port... " $true $true
+	if ($File){
+		send-email -Credential $SMSCredentials -server $Server -port $Port -from $emailaddress -to "$Number@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" -attachment "$File" > $null
+	} else {
+		send-email -Credential $SMSCredentials -server $Server -port $Port -from $emailaddress -to "$Number@$($CarrierDict[$Carrier])" -Message "$Message" -SSL "$SSL" -logfile $LogFile -timeout $Timeout > $null
 	}
+	Log "DONE" $false $false "green"
+
 }

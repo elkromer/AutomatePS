@@ -1,3 +1,13 @@
+if (-not (Test-Path "C:\Users\$env:UserName\source")) {
+	Write-Host "C:\Users\$env:UserName\source does not exist. Creating it."
+	mkdir "C:\Users\$env:UserName\source"
+}
+
+if (-not (Test-Path "C:\Users\$env:UserName\source\repos")) {
+	Write-Host "C:\Users\$env:UserName\source\repos does not exist. Creating it."
+	mkdir "C:\Users\$env:UserName\source\repos"
+}
+
 $v10productNames = $v10products.net
 $v20productNames = $v20products.net
 $v10NameMap = @{}

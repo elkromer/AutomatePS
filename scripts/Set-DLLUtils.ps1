@@ -1,4 +1,4 @@
-. $toolspath\common.ps1
+. $tools\common.ps1
 $v10releasepath = "C:\dev\branches\v10\Release"
 $v20releasepath = "C:\dev\branches\v20\Release"
 $v10 = "C:\dev\branches\v10";

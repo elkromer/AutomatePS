@@ -10,7 +10,7 @@ param(
 )
 
 $dockerDesktopPath = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-$dockerFilesPath = "C:\Users\reese\source\repos\docker"
+$dockerFilesPath = $dockerpath
 $dockerPollContainer = "ubuntu14_openssh78" 
 $sftpDriveDockerProfile = "docker"
 $sftpDriveLocation = "C:\Program Files\nsoftware\SFTP Drive V2"

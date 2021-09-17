@@ -11,4 +11,4 @@
 . "$PSScriptRoot\Modules\location.ps1"
 . "$PSScriptRoot\Modules\support.ps1"
 
-Export-ModuleMember -Alias * -Function * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, emailaddress
+Export-ModuleMember -Alias * -Function * -Variable desktop, mod, prg, prg86, prof, sysprof, profdir, emailaddress, dockerpath

@@ -342,6 +342,19 @@ function Get-SVNLog([string] $query, [string] $version){
 		}
 	}
 }
+
+function Get-UserFromSID([string] $sid) {
+	$objSID = New-Object System.Security.Principal.SecurityIdentifier($sid)
+	$objUser = $objSID.Translate( [System.Security.Principal.NTAccount])
+	$objUser.Value
+}
+
+function Get-SIDFromUser([string] $user) {
+	$objUser = New-Object System.Security.Principal.NTAccount($user)
+	$strSID = $objUser.Translate([System.Security.Principal.SecurityIdentifier])
+	$strSID.Value
+}
+
 <# 
 	.SYNOPSIS 
 	This function sets a folder icon on specified folder. 
